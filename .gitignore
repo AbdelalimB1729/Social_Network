@@ -1,0 +1,15 @@
+# Masquer les Dependences
+node_modules/
+
+# Masquer dotenv : les  variables d'environements
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+
+# Masquer les images
+images/
+

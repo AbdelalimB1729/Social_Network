@@ -1,0 +1,1 @@
+create database social_network;
