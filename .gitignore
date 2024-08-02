@@ -1,4 +1,4 @@
-# Masquer les Dependences
+# Masquer le node modules
 node_modules/
 
 # Masquer dotenv : les  variables d'environements
@@ -13,3 +13,5 @@ npm-debug.log*
 # Masquer les images
 images/
 
+#Masquer la structure de la base de donnee: 
+base_de_donnees.sql
