@@ -23,34 +23,25 @@
             
             <form class="needs-validation" action="register" method="post" novalidate>
             
-            <div class="top-row">
               <div class="form-group">
-                <input name="prenom" placeholder="Prenom" type="text"  required autocomplete="off" />
+                <input name="username" placeholder="Username" type="text"  required autocomplete="off" />
                 <div class="valid-feedback">Parfait!</div>
-              <div class="invalid-feedback">S'il vous plait entrez votre prenom.</div>
+              <div class="invalid-feedback">S'il vous plait entrez votre username.</div>
               </div>
-          
               <div class="form-group">
-                <input name="nom" placeholder="Nom" type="text"required autocomplete="off"/>
+                <input name="email" placeholder="Email" type="email"required autocomplete="off"/>
                 <div class="valid-feedback">Parfait!</div>
-              <div class="invalid-feedback">S'il vous plait entrez votre nom.</div>
-              </div>
+              <div class="invalid-feedback">S'il vous plait entrez votre email.</div>
             </div>
             <div class="form-group">
-              <input name="adresse" placeholder="Adresse" type="text"required autocomplete="off"/>
-              <div class="valid-feedback">Parfait!</div>
-            <div class="invalid-feedback">S'il vous plait entrez votre adresse.</div>
-            </div>
-            <div class="form-group">
-              <input name="email" placeholder="Email" type="email"required autocomplete="off"/>
-              <div class="valid-feedback">Parfait!</div>
-            <div class="invalid-feedback">S'il vous plait entrez votre email.</div>
-            </div>
-            
-            <div class="form-group">
-              <input name="mot_de_passe" placeholder="Mot de passe" type="password"required autocomplete="off"/>
+              <input id="mtp" name="mot_de_passe" placeholder="Mot de passe" type="password"required autocomplete="off"/>
               <div class="valid-feedback">Parfait!</div>
               <div class="invalid-feedback">S'il vous plait entrez votre mot de passe.</div>
+            </div>
+            <div class="form-group">
+              <input id="c_mtp" name="c_mot_de_passe" placeholder="Confirmer votre mot de passe" type="text"required autocomplete="off"/>
+              <div class="valid-feedback">Parfait!</div>
+            <div class="invalid-feedback">votre mot de passe n'est pas compatible.</div>  
             </div>
             
             <button type="submit" class="button button-block"/>S'enrigistrer</button>

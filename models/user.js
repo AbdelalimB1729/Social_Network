@@ -3,12 +3,11 @@ const bcrypt = require('bcrypt');
 const connection = require('../partials/connection_mongoose');
 const { Schema } = mongoose;
 const user = Schema({
-    prenom: {type: String,maxlength: 50,require:true},
-    nom: {type: String,maxlength: 50,require:true},
+    username : {type: String,maxlength: 50,require:true, unique: true},
     email: {type: String,maxlength: 100,require:true,unique:true},
-    adresse: {type: String,maxlength: 200,require:true},
-    mot_de_passe: {type: String,maxlength: 100,require:true}
-})
+    mot_de_passe: {type: String,maxlength: 100,require:true},
+    role: {type: String,maxlength: 50,require:true,enum: ['admin','user']}
+},{timestamps: true} );
 user.pre('save',async function(next){
     try{
         const sel = await bcrypt.genSalt(10);
