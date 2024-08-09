@@ -1,15 +1,16 @@
-const mysql2 = require('mysql2/promise');
-require('dotenv').config
-const conn = mysql2.createConnection(
+const mysql = require('mysql2');
+const etablire_connexion = mysql.createConnection(
     {
-        host: process.env.hostname,
-        user: process.env.username,
-        password: process.env.password,
-        database: process.env.database
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'social_network'
     }
-).then(()=>{
-    console.log("connecté à la base de donnée");
-}).catch((e)=>{
-    console.log("erreur de connexion");
-    console.error(e);
+)
+
+etablire_connexion.connect((err)=>{
+    if(err) throw err;
+    console.log('connexion établie');
 })
+module.exports = etablire_connexion;
+

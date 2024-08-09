@@ -7,6 +7,7 @@ app.set('views', __dirname + '/views/form');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/form', router);
 

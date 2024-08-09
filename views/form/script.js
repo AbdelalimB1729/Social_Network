@@ -43,17 +43,23 @@
   (function() {
     'use strict';
     window.addEventListener('load', function() {
-      var forms = document.getElementsByClassName('needs-validation');
-      var validation = Array.prototype.filter.call(forms, function(form) {
-        form.addEventListener('submit', function(event) {
-          if (form.checkValidity() === false) {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                var password = document.getElementById('mtp').value;
+                var confirmPassword = document.getElementById('c_mtp').value;
 
-              event.preventDefault();
-              event.stopPropagation();
-            
-          }
-          form.classList.add('was-validated');
-        }, false);
-      });
+                if (form.checkValidity() === false || password !== confirmPassword) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    if (password !== confirmPassword) {
+                        document.getElementById('c_mtp').setCustomValidity("Les mots de passe ne correspondent pas.");
+                    } else {
+                        document.getElementById('c_mtp').setCustomValidity("");
+                    }
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
     }, false);
-  })();
+})();
