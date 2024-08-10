@@ -6,7 +6,6 @@ const mongoose = require("mongoose");
 const Message = require("../models/message");
 const User = require("../models/user");
 const jwt = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
 const conn = require("../partials/connection_mysql");
 const http = require("http");
 const router = express.Router();
