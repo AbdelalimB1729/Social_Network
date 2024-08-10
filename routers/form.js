@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
-const dossier_form = path.join(__dirname,'..','views','form');
+const dossier_form = path.join(__dirname,'..','views');
 router.use(express.static(dossier_form));
 
 router.use(express.urlencoded({extended: false}));
