@@ -27,8 +27,10 @@ const newUser = new User(
         
     }
 );
-await newUser.save().then(()=>{
+await newUser.save().then(async  ()=>{
     id = newUser._id;
+    const sel = await bcrypt.genSalt(10);
+    user.mot_de_passe = await bcrypt.hash(user.mot_de_passe,sel)
     const sql = 'INSERT INTO users(id,username,email,password) VALUES(?,?,?,?) ';
     conn.query(sql,[String(id),user.username,user.email,user.mot_de_passe],(error)=>{
         if(error) {
@@ -43,13 +45,15 @@ await newUser.save().then(()=>{
 })
 
 router.post('/connexion',async (req,res)=>{
-    const user = req.body;
-    const {email , mot_de_passe} = user;
-    await User.findOne({email:email}).then(()=>{
-       let verify = bcrypt.compareSync(user.mot_de_passe,User.mot_de_passe);
+    const {email , mot_de_passe}  = req.body;
+    const user = await User.findOne({email:email});
+    if(!user){
+     res.send('email non trouvé');
+    }
+       let verify = bcrypt.compareSync(mot_de_passe,user.mot_de_passe);
        if(verify){
         const sql = "SELECT * FROM users WHERE id = ?";
-        conn.query(sql,[String(User._id)],(err,results)=>{
+        conn.query(sql,[String(user._id)],(err,results)=>{
             if(err) {
                 console.log(err);
             }
@@ -57,16 +61,16 @@ router.post('/connexion',async (req,res)=>{
                 if(results.length > 0){
                     const signature = crypto.randomBytes(32).toString('hex');
                     const token_access = jwt.sign({
-                        id: User._id,
-                        username: User.username,
-                        email: User.email,
-                        role: User.role
+                        id: user._id,
+                        username: user.username,
+                        email: user.email,
+                        role: user.role
                     },signature,{expiresIn: '1h'});
                     const token_refresh = jwt.sign({
-                        id: User._id,
-                        username: User.username,
-                        email: User.email,
-                        role: User.role
+                        id: user._id,
+                        username: user.username,
+                        email: user.email,
+                        role: user.role
                     }, signature,{expiresIn: '30d'} )
                     res.cookie(
                         'token_access',
@@ -78,13 +82,14 @@ router.post('/connexion',async (req,res)=>{
                         token_refresh,
                         {httpOnly: true, secure: true, maxAge: 2592000000}
                     )
+                    res.send('t es connecte')
                     
                 }
             }
         })
        }
     })
-})
+
 
 
 

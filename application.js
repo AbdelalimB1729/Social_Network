@@ -8,6 +8,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 const router = require('./routers/form');
+const cookieParser = require('cookie-parser');
 const routerchat = require('./routers/chat')(io);
 
 app.set('view engine', 'ejs');
