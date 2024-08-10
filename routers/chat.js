@@ -5,13 +5,15 @@ const path = require("path");
 const mongoose = require("mongoose");
 const Message = require("../models/message");
 const User = require("../models/user");
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 const conn = require("../partials/connection_mysql");
 const http = require("http");
 const router = express.Router();
 
 const dossier_form = path.join(__dirname, "..", "views");
 router.use(express.static(dossier_form));
-
+router.use(cookieParser)
 router.use(express.urlencoded({ extended: false }));
 
 router.get("/", (req, res) => {
@@ -20,13 +22,13 @@ router.get("/", (req, res) => {
 
 router.get("/:roomId", async (req, res) => {
   const roomId = req.params.roomId;
-  //   const user = req.cookies.user.username.decode ;
-  const user = "test";
+  const token = req.cookies.token_access;
+  const userData = jwt.decode(token);
   const MessagesFiles = await Message.find({ roomId: roomId });
   const users = await User.find();
   res.render("ChatPage", {
     roomId: req.params.roomId,
-    user: user,
+    user: userData.username,
     usersList: users,
     Messages: MessagesFiles,
   });
@@ -34,15 +36,15 @@ router.get("/:roomId", async (req, res) => {
 
 router.get("/:roomId/:userId", async (req, res) => {
   const roomId = req.params.roomId;
-  // const user = req.cookies.user.username.decode ;
-  const user = "test";
+  const token = req.cookies.token_access;
+  const userData = jwt.decode(token);
   const otherUserId = req.params.userId;
   const privateRoomId = `${roomId}-${otherUserId}`;
   const MessagesFiles = await Message.find({ roomId: privateRoomId });
   const users = await User.find();
   res.render("ChatPage", {
     roomId: privateRoomId,
-    user: user,
+    user: userData.username,
     usersList: users,
     Messages: MessagesFiles,
   });
