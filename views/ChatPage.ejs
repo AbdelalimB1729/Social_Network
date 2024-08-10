@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+      integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/stylechat.css" />
+    <title>Chat-app</title>
+  </head>
+  <body>
+    <div class="chat-container">
+      <header class="chat-header">
+        <h1><i <i class="fas fa-home"></i> Chat-app</h1>
+        <a id="leave-btn" class="btn">Leave Room</a>
+      </header>
+      <main class="chat-main">
+        <div class="chat-sidebar">
+          <h3><i class="fas fa-comments"></i> Room Name:</h3>
+          <h2 id="room-name"><%= roomId %></h2>
+          <h3><i class="fas fa-users"></i> Users</h3>
+          <ul id="users">
+            <% usersList.forEach(user => { %>
+            <li>
+              <a class="userATag" href="/chat/<%= roomId %>/<%= user.username %>">
+                <%= user.username %>
+              </a>
+            </li>
+            <% }); %>
+          </ul>
+        </div>
+        <div id="chat-messages">
+          <% Messages.forEach(message => { %>
+          <p><%= message.username %> : <%= message.message %></p>
+          <% }) %>
+        </div>
+      </main>
+      <div class="chat-form-container">
+        <form id="chat-form">
+          <input
+            id="msg"
+            type="text"
+            placeholder="Enter Message"
+            required
+            autocomplete="off"
+          />
+          <button type="submit" class="btn">
+            <i class="fas fa-paper-plane"></i> Send
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.2/qs.min.js"
+      integrity="sha256-TDxXjkAUay70ae/QJBEpGKkpVslXaHHayklIVglFRT4="
+      crossorigin="anonymous"
+    ></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      var form = document.getElementById("chat-form");
+      var input = document.getElementById("msg");
+      var roomId = "<%= roomId %>";
+
+      socket.emit("join room", roomId);
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit("chat message", input.value);
+          input.value = "";
+        }
+      });
+
+      socket.on("chat message", (msg) => {
+        let item = document.createElement("p");
+        item.innerHTML = "<%= user %> : " + msg;
+        var chatMessages = document.getElementById('chat-messages');
+        chatMessages.appendChild(item);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      });
+      var leave_btn = document.getElementById("leave-btn");
+      leave_btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        const leaveRoom = confirm(
+          "Are you sure you want to leave the chatroom?"
+        );
+        if (leaveRoom) {
+          window.location.href = "/chat/";
+        } 
+      })
+    </script>
+  </body>
+</html>

@@ -1,15 +1,25 @@
 const express = require('express');
-const app = express();
-const router = require('./routers/form');
+const http = require('http');
+const path = require('path');
+const socketio = require('socket.io');
 const cookieParser = require('cookie-parser');
 
+const app = express();
+const server = http.createServer(app);
+const io = socketio(server);
+const router = require('./routers/form');
+const cookieParser = require('cookie-parser');
+const routerchat = require('./routers/chat')(io);
+
 app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views/form');
+app.set('views', __dirname + '/views');
+app.use(express.static(path.join(__dirname,'public')))
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 
 app.use('/form', router);
+app.use('/chat',routerchat)
 
-module.exports = app;
+module.exports = {app , server};

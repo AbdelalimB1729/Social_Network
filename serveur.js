@@ -1,6 +1,6 @@
-const app = require('./application');
+const { app, server } = require('./application');
 const port = 3000;
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server is running on: http://localhost:${port}/form`);
 });
