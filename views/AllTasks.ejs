@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Tasks</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container">
+        <h1 class="text-center my-5">All Tasks</h1>
+        
+        <% if (tasks && tasks.length > 0) { %>
+            <table class="table table-hover table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Assigned To</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% tasks.forEach(task => { %>
+                        <tr>
+                            <td><%= task.title %></td>
+                            <td><%= task.description %></td>
+                            <td><%= task.user_id %></td>
+                            <td>
+                                <div class="d-flex">
+                                    <a href="/api/tasks/<%= task._id %>" class="btn btn-info btn-sm me-2">Details</a>
+                                    <a href="/tasks/<%= task._id %>/edit" class="btn btn-primary btn-sm me-2">Edit</a>
+                                    <form action="/api/tasks/<%= task._id %>?_method=DELETE" method="POST" class="d-inline">
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <div class="alert alert-warning text-center" role="alert">
+                No tasks found.
+            </div>
+        <% } %>
+
+        <div class="text-center mt-4">
+            <a href="/api/create" class="btn btn-success">Create New Task</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -50,18 +50,20 @@ router.get("/:roomId/:userId", async (req, res) => {
 
 module.exports = (io) => {
   io.on("connection", (socket) => {
-    //   const user = req.cookies.user.username.decode ;
-    const user = "test";
+    const token = socket.request.headers.cookie
+      .split('; ')
+      .find(row => row.startsWith('token_access='))
+      ?.split('=')[1];
+    const userData = jwt.decode(token);
     socket.on("join room", (roomId) => {
       socket.join(roomId);
       console.log(`User joined room: ${roomId}`);
-
       socket.on("chat message", async (msg) => {
         io.to(roomId).emit("chat message", msg);
         try {
           const Newmessage = new Message({
             roomId: String(roomId),
-            username: String(user),
+            username: String(userData.username),
             message: String(msg),
           });
           await Newmessage.save();

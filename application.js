@@ -8,6 +8,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 const router = require('./routers/form');
+const task_router = require('./routers/task');
 const cookieParser = require('cookie-parser');
 const routerchat = require('./routers/chat')(io);
 
@@ -21,5 +22,6 @@ app.use(cookieParser());
 
 app.use('/form', router);
 app.use('/chat',routerchat)
+app.use('/api',task_router)
 
 module.exports = {app , server};
