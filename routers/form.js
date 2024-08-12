@@ -82,7 +82,7 @@ router.post('/connexion',async (req,res)=>{
                         token_refresh,
                         {httpOnly: true, secure: true, maxAge: 2592000000}
                     )
-                    res.send('t es connecte')
+                    res.redirect('/home/')
                     
                 }
             }
