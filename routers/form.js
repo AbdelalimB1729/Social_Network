@@ -59,7 +59,8 @@ router.post('/connexion',async (req,res)=>{
             }
             else{
                 if(results.length > 0){
-                    const signature = crypto.randomBytes(32).toString('hex');
+                    // const signature = crypto.randomBytes(32).toString('hex');
+                    const signature = "secretKey"
                     const token_access = jwt.sign({
                         id: user._id,
                         username: user.username,
