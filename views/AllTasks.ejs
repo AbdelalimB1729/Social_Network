@@ -29,7 +29,7 @@
                             <td>
                                 <div class="d-flex">
                                     <a href="/api/tasks/<%= task._id %>" class="btn btn-info btn-sm me-2">Details</a>
-                                    <a href="/tasks/<%= task._id %>/edit" class="btn btn-primary btn-sm me-2">Edit</a>
+                                    <a href="/api/tasks/<%= task._id %>/edit" class="btn btn-primary btn-sm me-2">Edit</a>
                                     <form action="/api/tasks/<%= task._id %>?_method=DELETE" method="POST" class="d-inline">
                                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                     </form>

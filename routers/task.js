@@ -10,7 +10,8 @@ const Task = require('../models/tasks');
 const middadmin = require('../middleware/adminmidd');
 const suiviActivity = require('../middleware/suiviActivity');
 const activity_logs = require('../models/activity_logs')
-
+const methodOverride = require('method-override');
+router.use(methodOverride('_method'));
 router.get('/create',(req,res)=>{
     res.render('createTask')
 })
@@ -70,6 +71,7 @@ router.get('/tasks/:id',async (req, res) => {
     
 })
 
+
 // router.use(suiviActivity)
 
 router.post('/tasks/:id/edit', middadmin, async (req, res) => {
@@ -81,13 +83,28 @@ router.post('/tasks/:id/edit', middadmin, async (req, res) => {
             if (err) {
                 res.send("not updated in mysql");
             }
-            res.send("updated in mysql et mongoose");        
+            res.redirect('/api/tasks')       
         })
     }).catch(()=>{
         console.log("not modified");
     });
 
     
+})
+router.get('/tasks/:id/edit',async (req,res)=>{
+    const { id } = req.params;
+    await Task.findById(id).then((resultat)=>{
+        res.render('editTask',{task : resultat})
+    }).catch(()=>{
+        console.log("not found in mongoose")
+        query = "select * from tasks where id = ? ";
+        connection2.query(query, [id], (err, results) => {
+            if (err) {
+                tasks = "not found in mysql"
+            }
+            res.render('editTask',{task : results})
+        })
+    });
 })
 router.delete('/tasks/:id', async (req, res) => {
     const { id } = req.params;

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
-const connection = require('../partials/connection_mongoose');
+const connection_mongoose = require('../partials/connection_mongoose');
+const connection_mysql=require('../partials/connection_mysql')
 const User = require('../models/user');
 
 const adminmidd = (req, res, next) => {
@@ -17,7 +18,7 @@ const adminmidd = (req, res, next) => {
     }).catch(()=>{
       console.error('Erreur lors de la recherche dans MongoDB:');
       const query = "SELECT role FROM users WHERE id = ?";
-      connection.query(query,[user_id],(err,resultat)=>{
+      connection_mysql.query(query,[user_id],(err,resultat)=>{
          if(resultat.length > 0){
         if(resultat[0].role === "admin") {
               next()

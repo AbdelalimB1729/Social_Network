@@ -21,8 +21,8 @@
             </div>
             <div class="card-footer text-center">
                 <a href="/tasks/<%= task._id %>/edit" class="btn btn-primary">Edit</a>
-                <form action="/tasks/<%= task._id %>?_method=DELETE" method="POST" class="d-inline">
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                <form action="/api/tasks/<%= task._id %>?_method=DELETE" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                 </form>
             </div>
         </div>

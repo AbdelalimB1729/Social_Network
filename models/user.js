@@ -6,8 +6,13 @@ const user = Schema({
     username : {type: String,maxlength: 50,require:true, unique: true},
     email: {type: String,maxlength: 100,require:true,unique:true},
     mot_de_passe: {type: String,maxlength: 100,require:true},
-    role: {type: String,maxlength: 50,require:true,enum: ['admin','user']}
-},{timestamps: true} );
+    role: {
+        type: String,
+        maxlength: 50,
+        required: true,
+        enum: ['admin', 'user'],
+        default: 'user'
+      }},{timestamps: true} );
 user.pre('save',async function(next){
     try{
         const sel = await bcrypt.genSalt(10);
