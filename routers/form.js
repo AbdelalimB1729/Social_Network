@@ -14,6 +14,11 @@ router.use(express.static(dossier_form));
 router.use(express.urlencoded({extended: false}));
 
 router.get('/',(req,res)=>{
+    const token = req.cookies.token_access;
+    const userData = jwt.decode(token);
+    if(userData){
+        res.redirect('/home/')
+    }
     res.render("LogIn");
 })
 
@@ -92,8 +97,12 @@ router.post('/connexion',async (req,res)=>{
        }
     })
 
-
-
-
+router.get('/logout',(req,res)=>{
+    const token_access = req.cookies.token_access;
+    const token_refresh = req.cookies.token_refresh ;
+    res.clearCookie('token_access');
+    res.clearCookie('token_refresh');
+    res.render("LogIn");
+})
 
 module.exports = router

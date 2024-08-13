@@ -20,7 +20,7 @@ router.post('/create' ,async (req, res) => {
     let task = req.body;
     const token = req.cookies.token_access;
     const userData = jwt.decode(token);
-    console.log(userData)
+    // console.log(userData)
     task.user_id = userData.id;
     let new_task = new Task(task);
     await new_task.save().then(()=>{
