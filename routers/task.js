@@ -74,6 +74,20 @@ router.get('/tasks/:id',async (req, res) => {
 
 // router.use(suiviActivity)
 
+router.get('/tasks/:id/edit', middadmin, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const task = await Task.findById(id);
+        if (!task) {
+            return res.status(404).send("Task not found");
+        }
+        res.render("editTask", { task });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server error");
+    }
+});
+
 router.post('/tasks/:id/edit', middadmin, async (req, res) => {
     const { id } = req.params;
     const task = req.body;
