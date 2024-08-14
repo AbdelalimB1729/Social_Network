@@ -2,11 +2,15 @@ const jwt = require('jsonwebtoken')
 const connection_mongoose = require('../partials/connection_mongoose');
 const connection_mysql=require('../partials/connection_mysql')
 const User = require('../models/user');
+const Task = require('../models/tasks');
 
 
-const adminmidd = (req, res, next) => {
+const adminmidd = async (req, res, next) => {
   const token_access = req.cookies.token_access;
-
+  const { id } = req.params;
+  NTask = await Task.findById(id)
+  Task_user_id = String(NTask.user_id)
+  
   if (!token_access) {
     return res.status(401).send('Token d\'accès manquant');
   }
@@ -20,7 +24,7 @@ const adminmidd = (req, res, next) => {
 
     User.findById(user_id).select('role').then((resultat) => {
       if (resultat) {
-        if (resultat.role === 'admin') {
+        if (resultat.role === 'admin' || String(resultat._id)=== Task_user_id) {
           next();
         } else {
           res.send("Vous n'avez pas les droits");
@@ -33,7 +37,7 @@ const adminmidd = (req, res, next) => {
       const query = "SELECT role FROM users WHERE id = ?";
       connection_mysql.query(query, [user_id], (err, resultat) => {
         if (resultat.length > 0) {
-          if (resultat[0].role === "admin") {
+          if (resultat[0].role === "admin" || String(resultat[0]._id)=== Task_user_id) {
             next();
           } else {
             res.send("Vous n'avez pas les droits");
