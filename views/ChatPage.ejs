@@ -37,7 +37,10 @@
           <% Messages.forEach(message => { %>
           <p><%= message.username %> : <%= message.message %></p>
           <% }) %>
+
         </div>
+        <div id="typing-indicator" style="color: grey; font-style: italic;"></div>
+
       </main>
       <div class="chat-form-container">
         <form id="chat-form">
@@ -76,7 +79,7 @@
           input.value = "";
         }
       });
-
+     
       socket.on("chat message", (msg) => {
         let item = document.createElement("p");
         item.innerHTML = "<%= user %> : " + msg;
@@ -84,6 +87,16 @@
         chatMessages.appendChild(item);
         chatMessages.scrollTop = chatMessages.scrollHeight;
       });
+      socket.on("typing", (username) => {
+    typingIndicator.innerHTML = `${username} is typing...`;
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(() => {
+      typingIndicator.innerHTML = '';
+    }, 3000);
+  });
+
+  var typingTimer;
+  var typingDelay = 3000;
       var leave_btn = document.getElementById("leave-btn");
       leave_btn.addEventListener("click", function (e) {
         e.preventDefault();

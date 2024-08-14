@@ -85,7 +85,9 @@ module.exports = (io) => {
           console.log("Error: " + error);
         }
       });
-
+      socket.on("typing", () => {
+        socket.broadcast.to(roomId).emit("typing", userData.username);
+      });
       socket.on("disconnect", () => {
         console.log("User disconnected");
       });
