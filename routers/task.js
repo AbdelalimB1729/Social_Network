@@ -20,7 +20,7 @@ router.post('/create' ,async (req, res) => {
     let task = req.body;
     const token = req.cookies.token_access;
     const userData = jwt.decode(token);
-    console.log(userData)
+    // console.log(userData)
     task.user_id = userData.id;
     let new_task = new Task(task);
     await new_task.save().then(()=>{
@@ -72,7 +72,7 @@ router.get('/tasks/:id',async (req, res) => {
 })
 
 
-// router.use(suiviActivity)
+router.use(suiviActivity)
 
 router.get('/tasks/:id/edit', middadmin, async (req, res) => {
     const { id } = req.params;
@@ -120,7 +120,7 @@ router.get('/tasks/:id/edit',async (req,res)=>{
         })
     });
 })
-router.delete('/tasks/:id', async (req, res) => {
+router.delete('/tasks/:id', middadmin ,async (req, res) => {
     const { id } = req.params;
     await Task.findByIdAndDelete(id).then(()=>{
         query = "delete from tasks where id = ? ";
@@ -134,6 +134,5 @@ router.delete('/tasks/:id', async (req, res) => {
     }).catch(()=>{
         res.redirect('/api/tasks');
     });
-    
 })
 module.exports = router;

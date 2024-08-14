@@ -14,6 +14,11 @@ router.use(express.static(dossier_form));
 router.use(express.urlencoded({extended: false}));
 
 router.get('/',(req,res)=>{
+    const token = req.cookies.token_access;
+    const userData = jwt.decode(token);
+    if(userData){
+        res.redirect('/home/')
+    }
     res.render("LogIn");
 })
 
@@ -23,6 +28,7 @@ const newUser = new User(
     {
         username: user.username,
         email: user.email,
+        role : 'user',
         mot_de_passe: user.mot_de_passe
         
     }
@@ -31,8 +37,8 @@ await newUser.save().then(async  ()=>{
     id = newUser._id;
     const sel = await bcrypt.genSalt(10);
     user.mot_de_passe = await bcrypt.hash(user.mot_de_passe,sel)
-    const sql = 'INSERT INTO users(id,username,email,password) VALUES(?,?,?,?) ';
-    conn.query(sql,[String(id),user.username,user.email,user.mot_de_passe],(error)=>{
+    const sql = 'INSERT INTO users(id,username,email,role,password) VALUES(?,?,?,?,?) ';
+    conn.query(sql,[String(id),user.username,user.email,"user",user.mot_de_passe],(error)=>{
         if(error) {
             console.log(error);
         }
@@ -91,8 +97,12 @@ router.post('/connexion',async (req,res)=>{
        }
     })
 
-
-
-
+router.get('/logout',(req,res)=>{
+    const token_access = req.cookies.token_access;
+    const token_refresh = req.cookies.token_refresh ;
+    res.clearCookie('token_access');
+    res.clearCookie('token_refresh');
+    res.render("LogIn");
+})
 
 module.exports = router
