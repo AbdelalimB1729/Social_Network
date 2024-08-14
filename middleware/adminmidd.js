@@ -9,6 +9,8 @@ const adminmidd = async (req, res, next) => {
   const token_access = req.cookies.token_access;
   const { id } = req.params;
   NTask = await Task.findById(id)
+  console.log(NTask);
+  
   Task_user_id = String(NTask.user_id)
   
   if (!token_access) {
