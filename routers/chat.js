@@ -9,6 +9,8 @@ const jwt = require("jsonwebtoken");
 const conn = require("../partials/connection_mysql");
 const http = require("http");
 const router = express.Router();
+const methodOverride = require('method-override');
+router.use(methodOverride('_method'));
 
 const dossier_form = path.join(__dirname, "..", "views");
 router.use(express.static(dossier_form));
@@ -27,6 +29,7 @@ router.get("/:roomId", async (req, res) => {
   res.render("ChatPage", {
     roomId: req.params.roomId,
     user: userData.username,
+    userRole : userData.role,
     usersList: users,
     Messages: MessagesFiles,
   });
@@ -43,9 +46,21 @@ router.get("/:roomId/:userId", async (req, res) => {
   res.render("ChatPage", {
     roomId: privateRoomId,
     user: userData.username,
+    userRole : userData.role,
     usersList: users,
     Messages: MessagesFiles,
   });
+});
+
+router.delete('/message/:id',async (req, res) => {
+  const message = await Message.findById(req.params.id);
+  try {
+      await Message.findByIdAndDelete(req.params.id);
+      res.redirect(`/chat/${message.roomId}`);
+  } catch (error) {
+      console.error('Erreur lors de la suppression du message :', error);
+      res.status(500).json({ error: 'Une erreur est survenue.' });
+  }
 });
 
 module.exports = (io) => {
@@ -77,10 +92,10 @@ module.exports = (io) => {
             [String(Newmessage._id),String(roomId), String(userData.username), String(msg)],
             (err, result) => {
               if (err) {
-                console.error(`Error during insertion: ${err.message}`);
+                console.error(`erreur d inserstion: ${err.message}`);
                 return;
               }
-              console.log("Message added successfully");
+              console.log("Message ajouté");
             }
           );
         } catch (error) {

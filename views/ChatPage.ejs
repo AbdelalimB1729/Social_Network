@@ -38,8 +38,19 @@
         </div>
         <div id="chat-messages">
           <% Messages.forEach(message => { %>
-          <p><%= message.username %> : <%= message.message %></p>
-          <% }) %>
+         <div>
+          <p class="d-inline">
+            <%= message.username %> : <%= message.message %>
+          </p>
+          <% if (user === message.username || userRole === 'admin') { %>
+            <form action="/chat/message/<%= message._id %>?_method=DELETE" method="POST" class="d-inline">
+              <button type="submit" class="delete-icon" style="border: none; background: none; cursor: pointer; color: red;">
+                <i class="fas fa-times"></i>
+              </button>
+            </form>
+            <% } %>
+         </div>
+         <% }) %>
         </div>
       </main>
       <div class="chat-form-container">
