@@ -5,7 +5,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const Message = require("../models/message");
 const User = require("../models/user");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const conn = require("../partials/connection_mysql");
 const http = require("http");
 const router = express.Router();
@@ -51,15 +51,18 @@ router.get("/:roomId/:userId", async (req, res) => {
 module.exports = (io) => {
   io.on("connection", (socket) => {
     const token = socket.request.headers.cookie
-      .split('; ')
-      .find(row => row.startsWith('token_access='))
-      ?.split('=')[1];
+      .split("; ")
+      .find((row) => row.startsWith("token_access="))
+      ?.split("=")[1];
     const userData = jwt.decode(token);
     socket.on("join room", (roomId) => {
       socket.join(roomId);
       console.log(`User joined room: ${roomId}`);
       socket.on("chat message", async (msg) => {
-        io.to(roomId).emit("chat message", msg);
+        io.to(roomId).emit("chat message", {
+          username: userData.username,
+          message: msg,
+        });
         try {
           const Newmessage = new Message({
             roomId: String(roomId),
@@ -67,12 +70,11 @@ module.exports = (io) => {
             message: String(msg),
           });
           await Newmessage.save();
-
           const query =
-            "INSERT INTO messages (roomId, username, message) VALUES (?, ?, ?)";
+            "INSERT INTO messages (id,roomId, username, message) VALUES (? ,?, ?, ?)";
           conn.query(
             query,
-            [String(roomId), String(user), String(msg)],
+            [String(Newmessage._id),String(roomId), String(userData.username), String(msg)],
             (err, result) => {
               if (err) {
                 console.error(`Error during insertion: ${err.message}`);
@@ -85,9 +87,7 @@ module.exports = (io) => {
           console.log("Error: " + error);
         }
       });
-      socket.on("typing", () => {
-        socket.broadcast.to(roomId).emit("typing", userData.username);
-      });
+
       socket.on("disconnect", () => {
         console.log("User disconnected");
       });

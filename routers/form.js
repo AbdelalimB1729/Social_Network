@@ -82,12 +82,12 @@ router.post('/connexion',async (req,res)=>{
                     res.cookie(
                         'token_access',
                         token_access,
-                        {httpOnly: true, secure: true, maxAge: 3600000}
+                        {httpOnly: true, secure: false, maxAge: 3600000}
                     )
                     res.cookie(
                         'token_refresh',
                         token_refresh,
-                        {httpOnly: true, secure: true, maxAge: 2592000000}
+                        {httpOnly: true, secure: false, maxAge: 2592000000}
                     )
                     res.redirect('/home/')
                     
